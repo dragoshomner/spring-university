@@ -2,13 +2,13 @@ package com.example.project.controllers;
 
 import com.example.project.configuration.security.JwtTokenUtil;
 import com.example.project.dtos.AuthRequest;
+import com.example.project.dtos.AuthenticatedUser;
 import com.example.project.dtos.CreateUserRequest;
 import com.example.project.dtos.UserView;
-import com.example.project.mappers.UserViewMapper;
+import com.example.project.mappers.AuthenticatedUserMapper;
 import com.example.project.models.User;
 import com.example.project.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,20 +29,20 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
-    private final UserViewMapper userViewMapper;
+    private final AuthenticatedUserMapper authenticatedUserMapper;
     private final UserService userService;
 
     @PostMapping("login")
-    public ResponseEntity<UserView> login(@RequestBody @Valid AuthRequest request) {
+    public ResponseEntity<AuthenticatedUser> login(@RequestBody @Valid AuthRequest request) {
         try {
             Authentication authenticate = authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
             User user = (User) authenticate.getPrincipal();
+            String jwtToken = jwtTokenUtil.generateAccessToken(user);
 
             return ResponseEntity.ok()
-                    .header(HttpHeaders.AUTHORIZATION, jwtTokenUtil.generateAccessToken(user))
-                    .body(userViewMapper.toUserView(user));
+                    .body(authenticatedUserMapper.toAuthenticatedUser(user, jwtToken));
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
