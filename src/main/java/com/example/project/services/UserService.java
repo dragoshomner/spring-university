@@ -1,6 +1,7 @@
 package com.example.project.services;
 
 import com.example.project.dtos.CreateUserRequest;
+import com.example.project.exceptions.DuplicateEntityException;
 import com.example.project.mappers.UserEditMapper;
 import com.example.project.dtos.UserView;
 import com.example.project.mappers.UserViewMapper;
@@ -40,7 +41,7 @@ public class UserService implements UserDetailsService {
     @Transactional
     public UserView create(CreateUserRequest request) {
         if (userRepo.findByUsername(request.getUsername()).isPresent()) {
-            throw new ValidationException("Username exists!");
+            throw new DuplicateEntityException(User.class);
         }
         if (request.getAuthorities() == null) {
             request.setAuthorities(new HashSet<>());

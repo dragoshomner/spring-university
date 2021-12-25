@@ -3,9 +3,7 @@ package com.example.project.databaseInitializer;
 import com.example.project.dtos.CreateUserRequest;
 import com.example.project.models.Role;
 import com.example.project.services.UserService;
-import com.mysql.cj.log.Log;
 import org.slf4j.Logger;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

@@ -18,9 +18,11 @@ import org.slf4j.Logger;
 public class DatabaseInitializer implements ApplicationListener<ApplicationReadyEvent> {
 
     private final UserDataInitializer userDataInitializer;
+    private final TrainDataInitializer trainDataInitializer;
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
-        this.userDataInitializer.initialize();
+        userDataInitializer.initialize();
+        trainDataInitializer.initialize();
     }
 }
