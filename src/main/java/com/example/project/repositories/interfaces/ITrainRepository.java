@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
-public interface ITrainRepository extends CrudRepository<Train, Integer> {
+public interface ITrainRepository extends CrudRepository<Train, Long> {
     Optional<Train> findByCode(String code);
     Page<Train> findAll(Pageable pageable);
 }
