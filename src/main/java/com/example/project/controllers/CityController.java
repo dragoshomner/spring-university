@@ -1,34 +1,28 @@
 package com.example.project.controllers;
 
+import com.example.project.dtos.CityDto;
 import com.example.project.dtos.ResponseMessage;
-import com.example.project.dtos.TrainEdit;
-import com.example.project.dtos.TrainView;
-import com.example.project.services.TrainService;
+import com.example.project.services.CityService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import org.slf4j.Logger;
-
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping("api")
 @RequiredArgsConstructor
-public class TrainController {
-    public final TrainService trainService;
+public class CityController {
+    public final CityService cityService;
     public final Logger logger;
 
-    @GetMapping("public/train/all")
-    public ResponseEntity<List<TrainView>> all(
-            @RequestParam Integer page,
-            @RequestParam Integer size
-    ) {
+    @GetMapping("public/city/all")
+    public ResponseEntity<List<CityDto>> all() {
         try {
-            List<TrainView> response = trainService.getAll(page, size);
+            List<CityDto> response = cityService.getAll();
             return ResponseEntity.ok()
                     .body(response);
         } catch (Exception ex) {
@@ -37,12 +31,12 @@ public class TrainController {
         }
     }
 
-    @GetMapping("public/train/{id}")
-    public ResponseEntity<TrainView> get(
+    @GetMapping("public/city/{id}")
+    public ResponseEntity<CityDto> get(
             @PathVariable Long id
     ) {
         try {
-            TrainView response = trainService.getOne(id);
+            CityDto response = cityService.getOne(id);
             if (response == null) {
                 return ResponseEntity.notFound().build();
             }
@@ -54,28 +48,12 @@ public class TrainController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PutMapping("train/{id}")
-    public ResponseEntity<ResponseMessage> update(
-            @PathVariable Long id,
-            @RequestBody @Valid TrainEdit trainEdit
-    ) {
-        try {
-            ResponseMessage response = trainService.update(id, trainEdit);
-            return ResponseEntity.ok(response);
-        } catch (Exception ex) {
-            logger.error(ex.getMessage());
-            ResponseMessage response = new ResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
-            return ResponseEntity.internalServerError().body(response);
-        }
-    }
-
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @DeleteMapping("train/{id}")
+    @DeleteMapping("city/{id}")
     public ResponseEntity delete(
             @PathVariable Long id
     ) {
         try {
-            ResponseMessage response = trainService.deleteById(id);
+            ResponseMessage response = cityService.deleteById(id);
             return ResponseEntity.ok(response);
         } catch (Exception ex) {
             logger.error(ex.getMessage());
