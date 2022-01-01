@@ -25,6 +25,7 @@ buildSrc/build
 /integration-tests/build
 /src/asciidoc/build
 target/
+application.properties
 
 # Eclipse artifacts, including WTP generated manifests
 .classpath

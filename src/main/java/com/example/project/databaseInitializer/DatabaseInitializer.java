@@ -20,11 +20,13 @@ public class DatabaseInitializer implements ApplicationListener<ApplicationReady
     private final UserDataInitializer userDataInitializer;
     private final TrainDataInitializer trainDataInitializer;
     private final CityDataInitializer cityDataInitializer;
+    private final RouteDataInitializer routeDataInitializer;
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         userDataInitializer.initialize();
         trainDataInitializer.initialize();
         cityDataInitializer.initialize();
+        routeDataInitializer.initialize();
     }
 }
