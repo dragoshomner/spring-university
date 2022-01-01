@@ -1,13 +1,9 @@
 package com.example.project.services;
 
 import com.example.project.dtos.*;
-import com.example.project.exceptions.DuplicateEntityException;
 import com.example.project.mappers.DriverMapper;
-import com.example.project.mappers.TrainMapper;
 import com.example.project.models.Driver;
-import com.example.project.models.Train;
 import com.example.project.repositories.interfaces.IDriverRepository;
-import com.example.project.repositories.interfaces.ITrainRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
