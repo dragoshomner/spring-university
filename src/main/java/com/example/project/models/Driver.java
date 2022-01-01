@@ -1,5 +1,6 @@
 package com.example.project.models;
 
+import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,23 +10,23 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
-@Getter @Setter
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@Table(indexes = {
-        @Index(name="unique_name", columnList = "name", unique = true)
-})
-public class City {
-    @Id @GeneratedValue
+public class Driver {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotNull
-    @Size(min = 1, message = "City name cannot be empty")
     private String name;
+
+    private Integer yearsOfExperience;
 
     @CreatedDate
     private LocalDateTime createdAt;
