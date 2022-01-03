@@ -29,27 +29,7 @@ public class Route {
     @JoinColumn(name = "city_to_id", nullable = false)
     private City cityTo;
 
-//    @ManyToOne
-//    @JoinColumn(name = "train_id", nullable = false)
-//    private Train train;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "driver_id", nullable = false)
-//    private Driver driver;
-
-//    @NotNull
-//    private LocalDateTime departureTime;
-//
-//    private LocalDateTime arrivalTime;
-
     private Integer distance;
 
     private Integer duration;
-
-//    private Integer remainingNumberOfSeats;
-
-//    @CreatedDate
-//    private LocalDateTime createdAt;
-//    @LastModifiedDate
-//    private LocalDateTime modifiedAt;
 }

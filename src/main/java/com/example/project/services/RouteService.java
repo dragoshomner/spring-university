@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +20,10 @@ public class RouteService {
 
     public Long getCount() {
         return routeRepository.count();
+    }
+
+    public Iterable<Route> getAll() {
+        return routeRepository.findAll();
     }
 
     @Transactional
