@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api")
@@ -20,13 +21,11 @@ public class TravelController {
 
     @GetMapping("public/travel")
     public ResponseEntity<List<Travel>> get(
-            @RequestParam Long cityFromId
+            @RequestParam Optional<Long> cityFromId,
+            @RequestParam Optional<Long> cityToId
     ) {
         try {
-            List<Travel> response = travelService.getAllByDepartureCityId(cityFromId);
-            if (response == null) {
-                return ResponseEntity.notFound().build();
-            }
+            List<Travel> response = travelService.getAllByCityId(cityFromId, cityToId);
             return ResponseEntity.ok(response);
         } catch (Exception ex) {
             logger.error(ex.getMessage());

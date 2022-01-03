@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,8 +20,14 @@ public class TravelService {
         return travelRepository.count();
     }
 
-    public List<Travel> getAllByDepartureCityId(Long cityFromId) {
-        return travelRepository.findAllByCityFromId(cityFromId);
+    public List<Travel> getAllByCityId(Optional<Long> cityFromId, Optional<Long> cityToId) {
+        if (cityFromId.isPresent() && cityToId.isPresent()) {
+            return travelRepository.findAllByCityFromAndCityToId(cityFromId.get(), cityToId.get());
+        }
+        if (cityFromId.isPresent()) {
+            return travelRepository.findAllByCityFromId(cityFromId.get());
+        }
+        return cityToId.map(travelRepository::findAllByCityToId).orElse(null);
     }
 
     @Transactional
