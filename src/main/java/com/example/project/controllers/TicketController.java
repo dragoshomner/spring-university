@@ -46,7 +46,7 @@ public class TicketController {
     }
 
     @PreAuthorize("hasAuthority('CLIENT')")
-    @GetMapping("ticket/my")
+    @GetMapping("tickets/my")
     public ResponseEntity<List<Travel>> getMy() {
         try {
             User authenticatedUser = (User) SecurityContextHolder
