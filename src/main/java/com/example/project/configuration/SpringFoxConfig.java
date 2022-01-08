@@ -37,8 +37,8 @@ public class SpringFoxConfig {
                 )
                 .info(
                         new Info()
-                                .title("Bookstore Rest Api")
-                                .description("Rest Api for bookstore web application")
+                                .title("Train Ticketing Rest Api")
+                                .description("Rest Api for ticketing web application")
                                 .version("1.0")
                 );
     }

@@ -5,6 +5,7 @@ import com.example.project.dtos.TrainEdit;
 import com.example.project.dtos.TrainView;
 import com.example.project.services.TrainService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,12 +24,9 @@ public class TrainController {
     public final Logger logger;
 
     @GetMapping("public/train/all")
-    public ResponseEntity<List<TrainView>> all(
-            @RequestParam Integer page,
-            @RequestParam Integer size
-    ) {
+    public ResponseEntity<List<TrainView>> all(Pageable pageable) {
         try {
-            List<TrainView> response = trainService.getAll(page, size);
+            List<TrainView> response = trainService.getAll(pageable);
             return ResponseEntity.ok()
                     .body(response);
         } catch (Exception ex) {

@@ -10,7 +10,7 @@ import com.example.project.models.Train;
 import com.example.project.repositories.interfaces.ITrainRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +27,8 @@ public class TrainService {
         return trainRepository.count();
     }
 
-    public List<TrainView> getAll(Integer page, Integer size) {
-        Page<Train> trains = trainRepository.findAll(PageRequest.of(page, size));
+    public List<TrainView> getAll(Pageable pageable) {
+        Page<Train> trains = trainRepository.findAll(pageable);
         return trainMapper.trainIterableToTrainViewList(trains);
     }
 

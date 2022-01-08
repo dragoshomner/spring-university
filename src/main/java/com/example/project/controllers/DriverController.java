@@ -5,6 +5,7 @@ import com.example.project.dtos.ResponseMessage;
 import com.example.project.services.DriverService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,12 +22,9 @@ public class DriverController {
     public final DriverService driverService;
 
     @GetMapping("public/driver/all")
-    public ResponseEntity<List<DriverDto>> all(
-            @RequestParam Integer page,
-            @RequestParam Integer size
-    ) {
+    public ResponseEntity<List<DriverDto>> all(Pageable pageable) {
         try {
-            List<DriverDto> response = driverService.getAll(page, size);
+            List<DriverDto> response = driverService.getAll(pageable);
             return ResponseEntity.ok()
                     .body(response);
         } catch (Exception ex) {

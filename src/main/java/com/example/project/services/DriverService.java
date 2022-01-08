@@ -7,6 +7,7 @@ import com.example.project.repositories.interfaces.IDriverRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +24,8 @@ public class DriverService {
         return driverRepository.count();
     }
 
-    public List<DriverDto> getAll(Integer page, Integer size) {
-        Page<Driver> drivers = driverRepository.findAll(PageRequest.of(page, size));
+    public List<DriverDto> getAll(Pageable pageable) {
+        Page<Driver> drivers = driverRepository.findAll(pageable);
         return driverMapper.driverIterableToDriverDtoList(drivers);
     }
 
