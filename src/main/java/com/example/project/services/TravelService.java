@@ -1,6 +1,7 @@
 package com.example.project.services;
 
 import com.example.project.dtos.ResponseMessage;
+import com.example.project.dtos.TravelRequestParamFilter;
 import com.example.project.models.Travel;
 import com.example.project.repositories.interfaces.ITravelRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +24,12 @@ public class TravelService {
         return travelRepository.count();
     }
 
-    public List<Travel> getAllByCustomParameters(Optional<Long> cityFromId,
-                                                 Optional<Long> cityToId,
-                                                 Optional<LocalDateTime> dateFrom) {
-        return travelRepository.findAllByCustomParameters(cityFromId, cityToId, dateFrom);
+    public List<Travel> getAllByCustomParameters(TravelRequestParamFilter travelRequestParamFilter) {
+        return travelRepository.findAllByCustomParameters(
+                travelRequestParamFilter.getCityFromId(),
+                travelRequestParamFilter.getCityToId(),
+                travelRequestParamFilter.getDateFrom()
+        );
     }
 
     public Travel getById(Long id) {

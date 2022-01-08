@@ -1,5 +1,6 @@
 package com.example.project.controllers;
 
+import com.example.project.dtos.TravelRequestParamFilter;
 import com.example.project.models.Travel;
 import com.example.project.services.TravelService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,12 +26,10 @@ public class TravelController {
     @Operation(summary = "Get travels by filters", tags = { "Travel" })
     @GetMapping("public/travel")
     public ResponseEntity<List<Travel>> get(
-            @RequestParam Optional<Long> cityFromId,
-            @RequestParam Optional<Long> cityToId,
-            @RequestParam @DateTimeFormat(iso= DateTimeFormat.ISO.DATE_TIME) Optional<LocalDateTime> dateFrom
+            @ModelAttribute TravelRequestParamFilter travelRequestParamFilter
     ) {
         try {
-            List<Travel> response = travelService.getAllByCustomParameters(cityFromId, cityToId, dateFrom);
+            List<Travel> response = travelService.getAllByCustomParameters(travelRequestParamFilter);
             return ResponseEntity.ok(response);
         } catch (Exception ex) {
             logger.error(ex.getMessage());
