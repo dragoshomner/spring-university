@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,14 +21,10 @@ public class TravelService {
         return travelRepository.count();
     }
 
-    public List<Travel> getAllByCityId(Optional<Long> cityFromId, Optional<Long> cityToId) {
-        if (cityFromId.isPresent() && cityToId.isPresent()) {
-            return travelRepository.findAllByCityFromAndCityToId(cityFromId.get(), cityToId.get());
-        }
-        if (cityFromId.isPresent()) {
-            return travelRepository.findAllByCityFromId(cityFromId.get());
-        }
-        return cityToId.map(travelRepository::findAllByCityToId).orElse(null);
+    public List<Travel> getAllByCustomParameters(Optional<Long> cityFromId,
+                                                 Optional<Long> cityToId,
+                                                 Optional<LocalDateTime> dateFrom) {
+        return travelRepository.findAllByCustomParameters(cityFromId, cityToId, dateFrom);
     }
 
     @Transactional
