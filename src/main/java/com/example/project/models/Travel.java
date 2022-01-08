@@ -45,4 +45,8 @@ public class Travel {
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime modifiedAt;
+
+    public Travel(Long id) {
+        this.id = id;
+    }
 }

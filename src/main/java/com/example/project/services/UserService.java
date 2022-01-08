@@ -38,6 +38,14 @@ public class UserService implements UserDetailsService {
                 );
     }
 
+    public User getById(Long userId) throws UsernameNotFoundException {
+        return userRepo
+                .findById(userId.intValue())
+                .orElseThrow(
+                        () -> new UsernameNotFoundException(format("User with id - %s, not found", userId))
+                );
+    }
+
     @Transactional
     public UserView create(CreateUserRequest request) {
         if (userRepo.findByUsername(request.getUsername()).isPresent()) {

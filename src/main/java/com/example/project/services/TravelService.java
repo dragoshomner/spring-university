@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.String.format;
+
 @Service
 @RequiredArgsConstructor
 public class TravelService {
@@ -25,6 +27,21 @@ public class TravelService {
                                                  Optional<Long> cityToId,
                                                  Optional<LocalDateTime> dateFrom) {
         return travelRepository.findAllByCustomParameters(cityFromId, cityToId, dateFrom);
+    }
+
+    public Travel getById(Long id) {
+        return travelRepository.findById(id).orElseThrow(
+                () -> new RuntimeException(format("Travel with id - %s, not found", id))
+        );
+    }
+
+    public void substractRemainingSeats(Long travelId) {
+        Travel travel = getById(travelId);
+        if (travel.getRemainingNumberOfSeats() < 1) {
+            throw new RuntimeException("There are not any remaining seat");
+        }
+        travel.setRemainingNumberOfSeats(travel.getRemainingNumberOfSeats() - 1);
+        travelRepository.save(travel);
     }
 
     @Transactional

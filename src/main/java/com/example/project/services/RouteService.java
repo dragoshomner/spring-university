@@ -2,8 +2,11 @@ package com.example.project.services;
 
 import com.example.project.dtos.DriverDto;
 import com.example.project.dtos.ResponseMessage;
+import com.example.project.dtos.TrainEdit;
+import com.example.project.dtos.TrainView;
 import com.example.project.models.Driver;
 import com.example.project.models.Route;
+import com.example.project.models.Train;
 import com.example.project.repositories.interfaces.IDriverRepository;
 import com.example.project.repositories.interfaces.IRouteRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +29,11 @@ public class RouteService {
         return routeRepository.findAll();
     }
 
+    public Route getOne(Long id) {
+        Route route = routeRepository.findById(id).orElse(null);
+        return route;
+    }
+
     @Transactional
     public ResponseMessage save(Route newRoute) {
         try {
@@ -34,5 +42,10 @@ public class RouteService {
         } catch (Exception ex) {
             return new ResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR, "Route cannot be saved!");
         }
+    }
+
+    public ResponseMessage deleteById(Long id) {
+        routeRepository.deleteById(id);
+        return new ResponseMessage(HttpStatus.ACCEPTED, "Route successfully deleted!");
     }
 }
