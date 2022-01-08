@@ -8,6 +8,8 @@ import com.example.project.dtos.UserView;
 import com.example.project.mappers.AuthenticatedUserMapper;
 import com.example.project.models.User;
 import com.example.project.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping(path = "api/public/")
 @RequiredArgsConstructor
+@Tag(name = "Auth", description = "Endpoints for managing authentication")
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
@@ -32,6 +35,7 @@ public class AuthController {
     private final AuthenticatedUserMapper authenticatedUserMapper;
     private final UserService userService;
 
+    @Operation(summary = "Get JWT token for user", tags = "Auth")
     @PostMapping("login")
     public ResponseEntity<AuthenticatedUser> login(@RequestBody @Valid AuthRequest request) {
         try {
@@ -48,6 +52,7 @@ public class AuthController {
         }
     }
 
+    @Operation(summary = "Create new client user", tags = "Auth")
     @PostMapping("register")
     public UserView register(@RequestBody @Valid CreateUserRequest request) {
         return userService.create(request);

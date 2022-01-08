@@ -3,6 +3,9 @@ package com.example.project.controllers;
 import com.example.project.dtos.CityDto;
 import com.example.project.dtos.ResponseMessage;
 import com.example.project.services.CityService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -15,10 +18,12 @@ import java.util.List;
 @RestController
 @RequestMapping("api")
 @RequiredArgsConstructor
+@Tag(name = "City", description = "Endpoints for managing cities")
 public class CityController {
     public final CityService cityService;
     public final Logger logger;
 
+    @Operation(summary = "Get all cities", tags = "City")
     @GetMapping("public/city/all")
     public ResponseEntity<List<CityDto>> all() {
         try {
@@ -31,9 +36,10 @@ public class CityController {
         }
     }
 
+    @Operation(summary = "Get a city by its id", tags = "City")
     @GetMapping("public/city/{id}")
     public ResponseEntity<CityDto> get(
-            @PathVariable Long id
+            @PathVariable @Schema(example = "582") Long id
     ) {
         try {
             CityDto response = cityService.getOne(id);
@@ -47,6 +53,7 @@ public class CityController {
         }
     }
 
+    @Operation(summary = "Delete city by its id", tags = "City")
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("city/{id}")
     public ResponseEntity delete(

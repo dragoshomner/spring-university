@@ -4,6 +4,9 @@ import com.example.project.dtos.ResponseMessage;
 import com.example.project.dtos.TrainEdit;
 import com.example.project.dtos.TrainView;
 import com.example.project.services.TrainService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -19,10 +22,12 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("api")
 @RequiredArgsConstructor
+@Tag(name = "Train", description = "Endpoints for managing trains")
 public class TrainController {
     public final TrainService trainService;
     public final Logger logger;
 
+    @Operation(summary = "Get all paginated trains", tags = { "Train" })
     @GetMapping("public/train/all")
     public ResponseEntity<List<TrainView>> all(Pageable pageable) {
         try {
@@ -35,9 +40,10 @@ public class TrainController {
         }
     }
 
+    @Operation(summary = "Get a train by its id", tags = "Train")
     @GetMapping("public/train/{id}")
     public ResponseEntity<TrainView> get(
-            @PathVariable Long id
+            @PathVariable @Schema(example = "100") Long id
     ) {
         try {
             TrainView response = trainService.getOne(id);
@@ -51,6 +57,7 @@ public class TrainController {
         }
     }
 
+    @Operation(summary = "Update a specific train", tags = "Train")
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("train/{id}")
     public ResponseEntity<ResponseMessage> update(
@@ -67,6 +74,7 @@ public class TrainController {
         }
     }
 
+    @Operation(summary = "Delete a train by its id", tags = "Train")
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("train/{id}")
     public ResponseEntity delete(

@@ -6,6 +6,8 @@ import com.example.project.models.Travel;
 import com.example.project.models.User;
 import com.example.project.services.TicketService;
 import com.example.project.services.TravelService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -20,11 +22,13 @@ import java.util.List;
 @RestController
 @RequestMapping("api")
 @RequiredArgsConstructor
+@Tag(name = "Ticket", description = "Endpoints for managing tickets")
 public class TicketController {
     public final TicketService ticketService;
     public final TravelService travelService;
     public final Logger logger;
 
+    @Operation(summary = "Buy a new ticket", tags = "Ticket")
     @PreAuthorize("hasAuthority('CLIENT')")
     @PostMapping("ticket")
     public ResponseEntity<ResponseMessage> buy(
@@ -45,6 +49,7 @@ public class TicketController {
         }
     }
 
+    @Operation(summary = "Get the tickets of authenticated user", tags = "Ticket")
     @PreAuthorize("hasAuthority('CLIENT')")
     @GetMapping("tickets/my")
     public ResponseEntity<List<Travel>> getMy() {

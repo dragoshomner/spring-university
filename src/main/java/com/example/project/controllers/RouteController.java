@@ -1,9 +1,11 @@
 package com.example.project.controllers;
 
-import com.example.project.dtos.DriverDto;
 import com.example.project.dtos.ResponseMessage;
 import com.example.project.models.Route;
 import com.example.project.services.RouteService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -16,10 +18,12 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("api")
 @RequiredArgsConstructor
+@Tag(name = "Route", description = "Endpoints for managing routes")
 public class RouteController {
     public final RouteService routeService;
     public final Logger logger;
 
+    @Operation(summary = "Get all routes", tags = "Route")
     @GetMapping("public/route/all")
     public ResponseEntity<Iterable<Route>> all() {
         try {
@@ -32,9 +36,10 @@ public class RouteController {
         }
     }
 
+    @Operation(summary = "Get a route by its id", tags = "Route")
     @GetMapping("public/route/{id}")
     public ResponseEntity<Route> get(
-            @PathVariable Long id
+            @PathVariable @Schema(example = "830") Long id
     ) {
         try {
             Route response = routeService.getOne(id);
@@ -48,7 +53,7 @@ public class RouteController {
         }
     }
 
-
+    @Operation(summary = "Create new route", tags = "Route")
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("route")
     public ResponseEntity<ResponseMessage> create(
@@ -64,6 +69,7 @@ public class RouteController {
         }
     }
 
+    @Operation(summary = "Delete a route by its id", tags = "Route")
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("route/{id}")
     public ResponseEntity delete(

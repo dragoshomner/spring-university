@@ -1,5 +1,6 @@
 package com.example.project.models;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
 })
 public class City {
     @Id @GeneratedValue
+    @Schema(hidden = true)
     private Long id;
 
     @NotNull
@@ -28,7 +30,9 @@ public class City {
     private String name;
 
     @CreatedDate
+    @Schema(hidden = true)
     private LocalDateTime createdAt;
     @LastModifiedDate
+    @Schema(hidden = true)
     private LocalDateTime modifiedAt;
 }
