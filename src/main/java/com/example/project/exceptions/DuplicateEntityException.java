@@ -16,6 +16,6 @@ public class DuplicateEntityException extends ValidationException {
     }
 
     public DuplicateEntityException(Class<?> classParameter, String keyName, String keyValue) {
-        super(String.format("%s with %s %d already exists", classParameter.getSimpleName(), keyName, keyValue));
+        super(String.format("%s with %s %s already exists", classParameter.getSimpleName(), keyName, keyValue));
     }
 }

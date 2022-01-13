@@ -10,6 +10,7 @@ import com.example.project.models.City;
 import com.example.project.models.Train;
 import com.example.project.repositories.interfaces.ICityRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -39,12 +40,17 @@ public class CityService {
     }
 
     @Transactional
-    public void save(CityDto cityDto) {
+    public ResponseMessage save(CityDto cityDto) {
         if (cityRepository.findByName(cityDto.getName()).isPresent()) {
             throw new DuplicateEntityException(City.class, "name", cityDto.getName());
         }
         City newCity = cityMapper.cityDtoToCity(cityDto);
-        cityRepository.save(newCity);
+        try {
+            cityRepository.save(newCity);
+            return new ResponseMessage(HttpStatus.ACCEPTED, "City successfully saved");
+        } catch (Exception ex) {
+            return new ResponseMessage(HttpStatus.BAD_REQUEST, "Cannot save city");
+        }
     }
 
     public ResponseMessage deleteById(Long id) {

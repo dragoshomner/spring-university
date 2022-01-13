@@ -35,4 +35,8 @@ public class City {
     @LastModifiedDate
     @Schema(hidden = true)
     private LocalDateTime modifiedAt;
+
+    public City(String name) {
+        this.name = name;
+    }
 }
