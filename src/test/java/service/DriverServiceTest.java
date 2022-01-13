@@ -1,15 +1,10 @@
 package service;
 
-import com.example.project.dtos.CityDto;
 import com.example.project.dtos.DriverDto;
 import com.example.project.dtos.ResponseMessage;
-import com.example.project.mappers.CityMapper;
 import com.example.project.mappers.DriverMapper;
-import com.example.project.models.City;
 import com.example.project.models.Driver;
-import com.example.project.repositories.interfaces.ICityRepository;
 import com.example.project.repositories.interfaces.IDriverRepository;
-import com.example.project.services.CityService;
 import com.example.project.services.DriverService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
