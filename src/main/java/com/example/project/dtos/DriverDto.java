@@ -1,5 +1,6 @@
 package com.example.project.dtos;
 
+import com.example.project.models.Driver;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -11,4 +12,9 @@ public class DriverDto {
     private String name;
     @Schema(example = "10")
     private Integer yearsOfExperience;
+
+    public DriverDto(String name, Integer yearsOfExperience) {
+        this.name = name;
+        this.yearsOfExperience = yearsOfExperience;
+    }
 }

@@ -32,4 +32,9 @@ public class Driver {
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime modifiedAt;
+
+    public Driver(String name, Integer yearsOfExperience) {
+        this.name = name;
+        this.yearsOfExperience = yearsOfExperience;
+    }
 }

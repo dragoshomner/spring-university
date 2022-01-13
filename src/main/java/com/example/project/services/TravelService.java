@@ -20,10 +20,6 @@ import static java.lang.String.format;
 public class TravelService {
     public final ITravelRepository travelRepository;
 
-    public Long getCount() {
-        return travelRepository.count();
-    }
-
     public List<Travel> getAllByCustomParameters(TravelRequestParamFilter travelRequestParamFilter) {
         return travelRepository.findAllByCustomParameters(
                 travelRequestParamFilter.getCityFromId(),

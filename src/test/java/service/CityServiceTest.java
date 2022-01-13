@@ -3,11 +3,9 @@ package service;
 import com.example.project.dtos.CityDto;
 import com.example.project.dtos.ResponseMessage;
 import com.example.project.mappers.CityMapper;
-import com.example.project.mappers.CityMapperImpl;
 import com.example.project.models.City;
 import com.example.project.repositories.interfaces.ICityRepository;
 import com.example.project.services.CityService;
-import org.apache.coyote.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;

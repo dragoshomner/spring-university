@@ -20,10 +20,6 @@ public class DriverService {
     public final IDriverRepository driverRepository;
     public final DriverMapper driverMapper;
 
-    public Long getCount() {
-        return driverRepository.count();
-    }
-
     public List<DriverDto> getAll(Pageable pageable) {
         Page<Driver> drivers = driverRepository.findAll(pageable);
         return driverMapper.driverIterableToDriverDtoList(drivers);
