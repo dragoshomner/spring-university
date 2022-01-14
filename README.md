@@ -1,4 +1,4 @@
-# Spring Ticketing Project for University 
+# Spring Train Ticketing Project for University 
 
 This project is a REST API built in String Boot using Controller-Service-Repository layers and providing a way to clients to view travels, find routes between two cities, check trains disponibility and buy tickets. Being mainly built for educational purpuses, during the implementation I mostly focused on scalable design patterns, testing, code readability and learning / using the newest technologies.
 
