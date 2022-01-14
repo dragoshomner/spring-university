@@ -9,9 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import static java.lang.String.format;
 
@@ -34,7 +32,7 @@ public class TravelService {
         );
     }
 
-    public void substractRemainingSeats(Long travelId) {
+    public void subtractRemainingSeats(Long travelId) {
         Travel travel = getById(travelId);
         if (travel.getRemainingNumberOfSeats() < 1) {
             throw new RuntimeException("There are not any remaining seat");

@@ -38,7 +38,7 @@ public class TicketController {
             User authenticatedUser = (User) SecurityContextHolder
                     .getContext().getAuthentication().getPrincipal();
 
-            travelService.substractRemainingSeats(newTicket.getTravelId());
+            travelService.subtractRemainingSeats(newTicket.getTravelId());
             ResponseMessage response = ticketService.save(authenticatedUser.getId(), newTicket);
 
             return ResponseEntity.ok(response);

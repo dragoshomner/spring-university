@@ -30,4 +30,11 @@ public class Route {
     private Integer distance;
 
     private Integer duration;
+
+    public Route(City cityFrom, City cityTo, Integer distance, Integer duration) {
+        this.cityTo = cityTo;
+        this.cityFrom = cityFrom;
+        this.duration = duration;
+        this.distance = distance;
+    }
 }

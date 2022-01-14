@@ -25,4 +25,9 @@ public class Ticket {
     @ManyToOne
     @JoinColumn(name = "travel_id", nullable = false)
     private Travel travel;
+
+    public Ticket(User user, Travel travel) {
+        this.user = user;
+        this.travel = travel;
+    }
 }

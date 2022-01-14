@@ -39,4 +39,9 @@ public class Train {
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime modifiedAt;
+
+    public Train(String code, Integer numberOfSeats) {
+        this.code = code;
+        this.numberOfSeats = numberOfSeats;
+    }
 }
