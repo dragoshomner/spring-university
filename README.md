@@ -8,6 +8,7 @@ During this project I used:
 - Entities, DTOs and Mappers - using MapStruct library
 - CRUD implementations - for main entities
 - Pagination - for getting more data in a structured way
+- Custom Exceptions - for a better understanding of the error
 - Database initializers - using factory pattern for adding data on startup to database (algorithmically, reading from CSV, using SQL procedures, Bing requests)
 - MySQL - with the below schema structure and procedures for initializing travel table
 - OpenCsv - for initializing cities table
