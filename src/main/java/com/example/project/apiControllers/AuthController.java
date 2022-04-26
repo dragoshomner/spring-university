@@ -1,4 +1,4 @@
-package com.example.project.controllers;
+package com.example.project.apiControllers;
 
 import com.example.project.configuration.security.JwtTokenUtil;
 import com.example.project.dtos.AuthRequest;

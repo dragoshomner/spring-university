@@ -1,8 +1,7 @@
-package com.example.project.controllers;
+package com.example.project.apiControllers;
 
 import com.example.project.dtos.ResponseMessage;
-import com.example.project.dtos.TrainEdit;
-import com.example.project.dtos.TrainView;
+import com.example.project.dtos.TrainDto;
 import com.example.project.services.TrainService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -23,15 +22,15 @@ import javax.validation.Valid;
 @RequestMapping("api")
 @RequiredArgsConstructor
 @Tag(name = "Train", description = "Endpoints for managing trains")
-public class TrainController {
+public class ApiTrainController {
     public final TrainService trainService;
     public final Logger logger;
 
     @Operation(summary = "Get all paginated trains", tags = { "Train" })
     @GetMapping("public/train/all")
-    public ResponseEntity<List<TrainView>> all(Pageable pageable) {
+    public ResponseEntity<List<TrainDto>> all(Pageable pageable) {
         try {
-            List<TrainView> response = trainService.getAll(pageable);
+            List<TrainDto> response = trainService.getAll();
             return ResponseEntity.ok()
                     .body(response);
         } catch (Exception ex) {
@@ -42,11 +41,11 @@ public class TrainController {
 
     @Operation(summary = "Get a train by its id", tags = "Train")
     @GetMapping("public/train/{id}")
-    public ResponseEntity<TrainView> get(
+    public ResponseEntity<TrainDto> get(
             @PathVariable @Schema(example = "100") Long id
     ) {
         try {
-            TrainView response = trainService.getOne(id);
+            TrainDto response = trainService.getOne(id);
             if (response == null) {
                 return ResponseEntity.notFound().build();
             }
@@ -54,23 +53,6 @@ public class TrainController {
         } catch (Exception ex) {
             logger.error(ex.getMessage());
             return ResponseEntity.internalServerError().build();
-        }
-    }
-
-    @Operation(summary = "Update a specific train", tags = "Train")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @PutMapping("train/{id}")
-    public ResponseEntity<ResponseMessage> update(
-            @PathVariable Long id,
-            @RequestBody @Valid TrainEdit trainEdit
-    ) {
-        try {
-            ResponseMessage response = trainService.update(id, trainEdit);
-            return ResponseEntity.ok(response);
-        } catch (Exception ex) {
-            logger.error(ex.getMessage());
-            ResponseMessage response = new ResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
-            return ResponseEntity.internalServerError().body(response);
         }
     }
 

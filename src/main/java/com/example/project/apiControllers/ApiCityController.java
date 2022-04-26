@@ -1,4 +1,4 @@
-package com.example.project.controllers;
+package com.example.project.apiControllers;
 
 import com.example.project.dtos.CityDto;
 import com.example.project.dtos.ResponseMessage;
@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("api")
 @RequiredArgsConstructor
 @Tag(name = "City", description = "Endpoints for managing cities")
-public class CityController {
+public class ApiCityController {
     public final CityService cityService;
     public final Logger logger;
 

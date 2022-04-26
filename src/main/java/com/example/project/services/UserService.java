@@ -18,6 +18,7 @@ import javax.transaction.Transactional;
 import javax.validation.ValidationException;
 
 import java.util.HashSet;
+import java.util.List;
 
 import static java.lang.String.format;
 
@@ -28,6 +29,10 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final UserViewMapper userViewMapper;
     private final UserEditMapper userEditMapper;
+
+    public List<User> getAll() {
+        return userRepo.findAll();
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -40,7 +45,7 @@ public class UserService implements UserDetailsService {
 
     public User getById(Long userId) throws UsernameNotFoundException {
         return userRepo
-                .findById(userId.intValue())
+                .findById(userId)
                 .orElseThrow(
                         () -> new UsernameNotFoundException(format("User with id - %s, not found", userId))
                 );

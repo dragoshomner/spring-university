@@ -3,13 +3,15 @@ package com.example.project.dtos;
 import lombok.Data;
 
 @Data
-public class CreateTrain {
+public class TrainDto {
+    private Long id;
     private String code;
     private Integer numberOfSeats;
 
-    public CreateTrain() {}
+    public TrainDto() {}
 
-    public CreateTrain(String code, Integer numberOfSeats) {
+    public TrainDto(Long id, String code, Integer numberOfSeats) {
+        this.id = id;
         this.code = code;
         this.numberOfSeats = numberOfSeats;
     }

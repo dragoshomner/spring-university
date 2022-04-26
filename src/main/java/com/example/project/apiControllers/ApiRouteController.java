@@ -1,36 +1,33 @@
-package com.example.project.controllers;
+package com.example.project.apiControllers;
 
-import com.example.project.dtos.DriverDto;
 import com.example.project.dtos.ResponseMessage;
-import com.example.project.services.DriverService;
+import com.example.project.models.Route;
+import com.example.project.services.RouteService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("api")
 @RequiredArgsConstructor
-@Tag(name = "Driver", description = "Endpoints for managing drivers")
-public class DriverController {
+@Tag(name = "Route", description = "Endpoints for managing routes")
+public class ApiRouteController {
+    public final RouteService routeService;
     public final Logger logger;
-    public final DriverService driverService;
 
-    @Operation(summary = "Get all paginated drivers", tags = "Driver")
-    @GetMapping("public/driver/all")
-    public ResponseEntity<List<DriverDto>> all(Pageable pageable) {
+    @Operation(summary = "Get all routes", tags = "Route")
+    @GetMapping("public/route/all")
+    public ResponseEntity<Iterable<Route>> all() {
         try {
-            List<DriverDto> response = driverService.getAll(pageable);
+            Iterable<Route> response = routeService.getAll();
             return ResponseEntity.ok()
                     .body(response);
         } catch (Exception ex) {
@@ -39,13 +36,13 @@ public class DriverController {
         }
     }
 
-    @Operation(summary = "Get driver by its id", tags = "Driver")
-    @GetMapping("public/driver/{id}")
-    public ResponseEntity<DriverDto> get(
-            @PathVariable @Schema(example = "245") Long id
+    @Operation(summary = "Get a route by its id", tags = "Route")
+    @GetMapping("public/route/{id}")
+    public ResponseEntity<Route> get(
+            @PathVariable @Schema(example = "830") Long id
     ) {
         try {
-            DriverDto response = driverService.getOne(id);
+            Route response = routeService.getOne(id);
             if (response == null) {
                 return ResponseEntity.notFound().build();
             }
@@ -56,14 +53,14 @@ public class DriverController {
         }
     }
 
-    @Operation(summary = "Create new driver", tags = "Driver")
+    @Operation(summary = "Create new route", tags = "Route")
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PostMapping("driver")
+    @PostMapping("route")
     public ResponseEntity<ResponseMessage> create(
-            @RequestBody @Valid DriverDto driverDto
+            @RequestBody @Valid Route route
     ) {
         try {
-            ResponseMessage response = driverService.save(driverDto);
+            ResponseMessage response = routeService.save(route);
             return ResponseEntity.ok(response);
         } catch (Exception ex) {
             logger.error(ex.getMessage());
@@ -72,31 +69,14 @@ public class DriverController {
         }
     }
 
-    @Operation(summary = "Update specific driver", tags = "Driver")
+    @Operation(summary = "Delete a route by its id", tags = "Route")
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PutMapping("driver/{id}")
-    public ResponseEntity<ResponseMessage> update(
-            @PathVariable Long id,
-            @RequestBody @Valid DriverDto driverDto
-    ) {
-        try {
-            ResponseMessage response = driverService.update(id, driverDto);
-            return ResponseEntity.ok(response);
-        } catch (Exception ex) {
-            logger.error(ex.getMessage());
-            ResponseMessage response = new ResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
-            return ResponseEntity.internalServerError().body(response);
-        }
-    }
-
-    @Operation(summary = "Delete a driver by its id", tags = "Driver")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @DeleteMapping("driver/{id}")
+    @DeleteMapping("route/{id}")
     public ResponseEntity delete(
             @PathVariable Long id
     ) {
         try {
-            ResponseMessage response = driverService.deleteById(id);
+            ResponseMessage response = routeService.deleteById(id);
             return ResponseEntity.ok(response);
         } catch (Exception ex) {
             logger.error(ex.getMessage());

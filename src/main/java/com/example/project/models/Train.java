@@ -1,5 +1,6 @@
 package com.example.project.models;
 
+import com.example.project.dtos.ObjectMapping;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +13,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 @Getter @Setter
 @Entity
@@ -44,4 +47,10 @@ public class Train {
         this.code = code;
         this.numberOfSeats = numberOfSeats;
     }
+
+    public static ArrayList<ObjectMapping> mapping = new ArrayList(Arrays.asList(
+            new ObjectMapping("id","ID", true, false, true, "number"),
+            new ObjectMapping("code", "Code", true, true, true, "text"),
+            new ObjectMapping("numberOfSeats", "Number of seats", true, true, false, "number")
+    ));
 }

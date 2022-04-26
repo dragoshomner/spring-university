@@ -1,4 +1,4 @@
-package com.example.project.controllers;
+package com.example.project.apiControllers;
 
 import com.example.project.dtos.TravelRequestParamFilter;
 import com.example.project.models.Travel;
@@ -16,7 +16,7 @@ import java.util.List;
 @RequestMapping("api")
 @RequiredArgsConstructor
 @Tag(name = "Travel", description = "Endpoints for managing travels")
-public class TravelController {
+public class ApiTravelController {
     public final TravelService travelService;
     public final Logger logger;
 

@@ -1,6 +1,8 @@
 package com.example.project.services;
 
 import com.example.project.dtos.*;
+import com.example.project.dtos.paging.Paged;
+import com.example.project.dtos.paging.Paging;
 import com.example.project.mappers.DriverMapper;
 import com.example.project.models.Driver;
 import com.example.project.repositories.interfaces.IDriverRepository;
@@ -8,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +23,15 @@ public class DriverService {
     public final IDriverRepository driverRepository;
     public final DriverMapper driverMapper;
 
-    public List<DriverDto> getAll(Pageable pageable) {
-        Page<Driver> drivers = driverRepository.findAll(pageable);
+    public List<DriverDto> getAll() {
+        Iterable<Driver> drivers = driverRepository.findAll();
         return driverMapper.driverIterableToDriverDtoList(drivers);
+    }
+
+    public Paged<DriverDto> getAllPaged(int pageNumber, int size, String sortBy) {
+        PageRequest request = PageRequest.of(pageNumber - 1, size, Sort.by(Sort.Direction.ASC, sortBy));
+        Page<DriverDto> driverDtoPage = driverRepository.findAll(request).map(driverMapper::driverToDriverDto);
+        return new Paged<>(driverDtoPage, Paging.of(driverDtoPage.getTotalPages(), pageNumber, size));
     }
 
     public DriverDto getOne(Long id) {
@@ -34,8 +43,9 @@ public class DriverService {
     public ResponseMessage save(DriverDto newDriverDto) {
         try {
             Driver newDriver = driverMapper.driverDtoToDriver(newDriverDto);
-            driverRepository.save(newDriver);
-            return new ResponseMessage(HttpStatus.ACCEPTED, "Driver successfully saved!");
+            Driver savedDriver = driverRepository.save(newDriver);
+            DriverDto savedDriverDto = driverMapper.driverToDriverDto(savedDriver);
+            return new ResponseMessage<DriverDto>(HttpStatus.ACCEPTED, "Driver successfully saved!", savedDriverDto);
         } catch (Exception ex) {
             return new ResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR, "Driver cannot be saved!");
         }

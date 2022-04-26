@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Navigation</title>
+
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
+</head>
+<body>
+
+    <nav th:fragment="admin-navigation" class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">TicketMaster</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/admin/ticket/all">Tickets <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Entities
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/admin/driver/all">Driver</a>
+                        <a class="dropdown-item" href="/admin/train/all">Train</a>
+                        <a class="dropdown-item" href="/admin/city/all">City</a>
+                        <a class="dropdown-item" href="/admin/route/all">Route</a>
+                        <a class="dropdown-item" href="/admin/travel/all">Travel</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+</body>
+</html>

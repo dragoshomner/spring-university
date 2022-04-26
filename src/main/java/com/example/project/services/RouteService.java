@@ -1,15 +1,14 @@
 package com.example.project.services;
 
-import com.example.project.dtos.DriverDto;
 import com.example.project.dtos.ResponseMessage;
-import com.example.project.dtos.TrainEdit;
-import com.example.project.dtos.TrainView;
-import com.example.project.models.Driver;
+import com.example.project.dtos.paging.Paged;
+import com.example.project.dtos.paging.Paging;
 import com.example.project.models.Route;
-import com.example.project.models.Train;
-import com.example.project.repositories.interfaces.IDriverRepository;
 import com.example.project.repositories.interfaces.IRouteRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +24,14 @@ public class RouteService {
         return routeRepository.count();
     }
 
-    public Iterable<Route> getAll() {
+    public List<Route> getAll() {
         return routeRepository.findAll();
+    }
+
+    public Paged<Route> getAllPaged(int pageNumber, int size, String sortBy) {
+        PageRequest request = PageRequest.of(pageNumber - 1, size, Sort.by(Sort.Direction.ASC, sortBy));
+        Page<Route> routePage = routeRepository.findAll(request);
+        return new Paged<>(routePage, Paging.of(routePage.getTotalPages(), pageNumber, size));
     }
 
     public Route getOne(Long id) {
@@ -37,8 +42,8 @@ public class RouteService {
     @Transactional
     public ResponseMessage save(Route newRoute) {
         try {
-            routeRepository.save(newRoute);
-            return new ResponseMessage(HttpStatus.ACCEPTED, "Route successfully saved!");
+            Route savedRoute = routeRepository.save(newRoute);
+            return new ResponseMessage<Route>(HttpStatus.ACCEPTED, "Route successfully saved!", savedRoute);
         } catch (Exception ex) {
             return new ResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR, "Route cannot be saved!");
         }

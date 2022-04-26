@@ -1,6 +1,6 @@
 package com.example.project.databaseInitializer;
 
-import com.example.project.dtos.CreateTrain;
+import com.example.project.dtos.TrainDto;
 import com.example.project.exceptions.DuplicateEntityException;
 import com.example.project.models.Train;
 import com.example.project.services.TrainService;
@@ -21,7 +21,7 @@ public class TrainDataInitializer implements IDataInitializer {
                 throw new DuplicateEntityException(Train.class);
             }
             for (int i = 1; i < 100; i++) {
-                CreateTrain createTrain = new CreateTrain();
+                TrainDto createTrain = new TrainDto();
                 createTrain.setCode(createCodeFromNumber(i));
                 createTrain.setNumberOfSeats(generateRandomSeatNumber());
                 trainService.save(createTrain);

@@ -1,0 +1,131 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Spring Boot Thymeleaf Application - Bootstrap Pagination</title>
+
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
+
+</head>
+<body>
+
+<div th:replace="admin/navigation.html :: admin-navigation"></div>
+
+<div class="container">
+    <h1 th:text="${modelName + ' Table'}" class="mt-3"></h1>
+    <div class="row">
+        <div class="col-lg-6">
+            <a th:href="${'/admin/' + modelName.toLowerCase() + '/new'}" class="btn btn-primary mt-3">Add new</a>
+        </div>
+        <div class="col-lg-6">
+            <select
+                id="sortBySelect"
+                name="sortBy"
+                class="custom-select mt-3"
+                aria-label="Select item"
+                onchange="sortByRedirect(this)">
+                <option th:selected="${sortBy == null}" value="sortBy">Sort by</option>
+                <th:block th:each="mapItem: ${mapping}">
+                    <option
+                        th:value="${mapItem.getKey()}"
+                        th:text="${mapItem.getTitle()}"
+                        th:selected="${sortBy == mapItem.getKey()}"
+                    >
+                        Option
+                    </option>
+                </th:block>
+            </select>
+        </div>
+    </div>
+    <div class="alert alert-success mt-3" role="alert" th:if="${successMessage != null}" th:text="${successMessage}">
+        This is a success alert—check it out!
+    </div>
+    <div class="alert alert-danger mt-3" role="alert" th:if="${errorMessage != null}" th:text="${errorMessage}">
+        This is a success alert—check it out!
+    </div>
+    <div class="row">
+        <div class="col-lg-12 mt-5 mb-5">
+            <table class="table table-bordered table-responsive-sm">
+                <thead>
+                    <tr>
+                        <th
+                            th:each="mapItem : ${mapping}"
+                            th:if="${mapItem.getShowTable() == true}"
+                            th:text="${mapItem.getTitle()}"></th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${items.page}">
+                        <td
+                            th:each="mapItem : ${mapping}"
+                            th:text="${mapItem.getInputType() == 'select' ?
+                                __${'item.' + mapItem.getKey() + '.' + mapItem.getChildKey()}__ :
+                                __${'item.' + mapItem.getKey()}__}"
+                        >${key}</td>
+                        <td>
+                            <a th:href="${'/admin/' + modelName.toLowerCase() + '/edit/' + item.getId()}" class="btn btn-warning">Edit</a>
+                        </td>
+                        <td>
+                            <form th:action="${'/admin/' + modelName.toLowerCase() + '/delete/' + item.getId()}" method="post">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <nav aria-label="Page navigation" class="paging">
+                <ul class="pagination justify-content-center" th:if="${items.page.totalPages > 1}">
+                    <li class="page-item" th:classappend="${!items.paging.isPrevEnabled()? 'disabled' : ''}">
+                        <a class="page-link" th:data-page="${items.paging.pageNumber - 1}"
+                           onclick="goToPage(this)"
+                           tabindex="-1">Previous</a>
+                    </li>
+                    <th:block th:each="item : ${items.paging.getItems()}">
+                        <li class="page-item" th:classappend="${item.index == items.paging.pageNumber? 'active' : ''}"
+                            th:if="${item.pageItemType.name() == 'PAGE'}">
+                            <a class="page-link" th:data-page="${item.index}"
+                               onclick="goToPage(this)"
+                               th:text="${item.index}"></a>
+                        </li>
+                        <li class="page-item disabled" th:if="${item.pageItemType.name() == 'DOTS'}">
+                            <a class="page-link" href="#">...</a>
+                        </li>
+                    </th:block>
+                    <li class="page-item" th:classappend="${!items.paging.isNextEnabled()? 'disabled' : ''}">
+                        <a class="page-link"
+                           th:data-page="${items.paging.pageNumber + 1}"
+                           onclick="goToPage(this)">Next</a>
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/webjars/jquery/3.1.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/4.0.0-2/js/bootstrap.min.js}"></script>
+
+<script>
+    const goToPage = (e) => {
+        const url = new URL(window.location.href);
+        url.searchParams.set('pageNumber', e.getAttribute('data-page'));
+        window.location.href = url;
+    };
+
+    const sortByRedirect = (e) => {
+        const url = new URL(window.location.href);
+        if (e.value !== "sortBy") {
+            url.searchParams.set('sortBy', e.value);
+        } else {
+            url.searchParams.delete('sortBy');
+        }
+        window.location.href = url;
+    };
+</script>
+
+</body>
+</html>

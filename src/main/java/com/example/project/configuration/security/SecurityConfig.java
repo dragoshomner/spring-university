@@ -78,35 +78,45 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http = http.cors().and().csrf().disable();
 
         // Set session management to stateless
-        http = http
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and();
+//        http = http
+//                .sessionManagement()
+//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                .and();
 
         // Set unauthorized requests exception handler
-        http = http
-                .exceptionHandling()
-                .authenticationEntryPoint(
-                        (request, response, ex) -> {
-                            logger.error("Unauthorized request - {}", ex.getMessage());
-                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
-                        }
-                )
-                .and();
+//        http = http
+//                .exceptionHandling()
+//                .authenticationEntryPoint(
+//                        (request, response, ex) -> {
+//                            logger.error("Unauthorized request - {}", ex.getMessage());
+//                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
+//                        }
+//                )
+//                .and();
 
         // Set permissions on endpoints
-        http.authorizeRequests()
-                // Swagger endpoints must be publicly accessible
-                .antMatchers("/").permitAll()
-                .antMatchers(format("%s/**", restApiDocPath)).permitAll()
-                .antMatchers(format("%s/**", swaggerPath)).permitAll()
-                // Our public endpoints
-                .antMatchers("/api/public/**").permitAll()
-                // Our private endpoints
-                .anyRequest().authenticated();
+//        http.authorizeRequests()
+//                // Swagger endpoints must be publicly accessible
+//                .antMatchers("/").permitAll()
+//                .antMatchers(format("%s/**", restApiDocPath)).permitAll()
+//                .antMatchers(format("%s/**", swaggerPath)).permitAll()
+//                // Our public endpoints
+//                .antMatchers("/api/public/**").permitAll()
+//                .antMatchers("/view/**").permitAll()
+//                // Our private endpoints
+//                .anyRequest().authenticated();
 
         // Add JWT token filter
-        http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
+
+        http
+            .formLogin()
+            .loginPage("/login")
+            .defaultSuccessUrl("/login-success", true)
+            .failureUrl("/login-error")
+        .and()
+            .logout()
+            .logoutSuccessUrl("/");
     }
 
     // Used by spring security if CORS is enabled.

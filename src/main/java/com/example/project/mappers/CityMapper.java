@@ -1,12 +1,8 @@
 package com.example.project.mappers;
 
 import com.example.project.dtos.CityDto;
-import com.example.project.dtos.TrainEdit;
-import com.example.project.dtos.TrainView;
 import com.example.project.models.City;
-import com.example.project.models.Train;
 import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
 
 import java.util.ArrayList;
 import java.util.List;

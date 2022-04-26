@@ -43,7 +43,7 @@ public class TicketServiceTest {
         ResponseMessage responseMessage = new ResponseMessage(HttpStatus.ACCEPTED, "Ticket successfully saved!");
 
         when(ticketMapper.ticketCreateWithUserIdToTicket(1L, ticketCreate)).thenReturn(ticket);
-        ResponseMessage responseMessageSave = ticketService.save(1L, ticketCreate);
+        ResponseMessage responseMessageSave = ticketService.save(ticket);
 
         assertNotNull(responseMessageSave);
         assertEquals(responseMessageSave.getStatus(), responseMessage.getStatus());

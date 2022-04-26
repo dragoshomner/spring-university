@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${operationType + ' ' + modelName}"></title>
+
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
+    <link th:href="@{/styles/style.css}" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <a
+                    th:href="${'/admin/' + modelName.toLowerCase() + '/all'}"
+                    class="btn btn-secondary mt-3">
+                        Back
+                </a>
+                <div class="alert alert-success mt-3" role="alert" th:if="${successMessage != null}" th:text="${successMessage}">
+                    This is a success alert—check it out!
+                </div>
+                <div class="alert alert-danger mt-3" role="alert" th:if="${errorMessage != null}" th:text="${errorMessage}">
+                    This is a success alert—check it out!
+                </div>
+                <form th:action="${'/admin/' + modelName.toLowerCase() + '/save'}" method="post">
+                    <div
+                        class="input-group my-3"
+                        th:each="mapItem: ${mapping}"
+                        th:if="${mapItem.getShowNew() == true || model != null}">
+                            <div class="input-group-prepend">
+                                <label
+                                    class="input-group-text"
+                                    th:for="${'select' + mapItem.getKey()}"
+                                    th:text="${mapItem.getTitle()}"
+                                >Options</label>
+                            </div>
+                            <th:block th:switch="${mapItem.getInputType()}">
+                                <select
+                                    th:id="${'select' + mapItem.getKey()}"
+                                    th:name="${mapItem.getKey()}"
+                                    th:case="'select'"
+                                    th:value="${model != null ? __${'model.' + mapItem.getKey() + '.id'}__ : ''}"
+                                    class="custom-select"
+                                    aria-label="Select item">
+                                        <option th:selected="${model == null}">Open this select menu</option>
+                                        <th:block th:each="option: ${__${mapItem.getKey()}__}">
+                                            <option
+                                                th:selected="${model != null && option.id == __${'model.' + mapItem.getKey() + '.id'}__}"
+                                                th:value="${option.id}"
+                                                th:text="${__${'option.' + mapItem.getChildKey()}__}">
+                                                    Option
+                                            </option>
+                                        </th:block>
+                                </select>
+                                <input
+                                    th:case="*"
+                                    th:type="${mapItem.getInputType()}"
+                                    class="form-control"
+                                    th:readonly="${mapItem.getDisableEdit() && operationType.toLowerCase() != 'add'}"
+                                    th:id="${'input' + mapItem.getKey()}"
+                                    th:name="${mapItem.getKey()}"
+                                    th:placeholder="${'Enter ' + mapItem.getTitle().toLowerCase()}"
+                                    th:value="${model != null ? __${'model.' + mapItem.getKey()}__ : ''}">
+                            </th:block>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

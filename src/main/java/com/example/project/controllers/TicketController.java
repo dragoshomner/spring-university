@@ -2,66 +2,115 @@ package com.example.project.controllers;
 
 import com.example.project.dtos.ResponseMessage;
 import com.example.project.dtos.TicketCreate;
+import com.example.project.dtos.TicketCreateRequest;
+import com.example.project.models.Ticket;
 import com.example.project.models.Travel;
 import com.example.project.models.User;
 import com.example.project.services.TicketService;
 import com.example.project.services.TravelService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import com.example.project.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.List;
 
-@RestController
-@RequestMapping("api")
+@Controller
+@RequestMapping("admin/ticket")
 @RequiredArgsConstructor
-@Tag(name = "Ticket", description = "Endpoints for managing tickets")
 public class TicketController {
-    public final TicketService ticketService;
-    public final TravelService travelService;
+    private final TicketService ticketService;
+    private final UserService userService;
+    private final TravelService travelService;
     public final Logger logger;
 
-    @Operation(summary = "Buy a new ticket", tags = "Ticket")
-    @PreAuthorize("hasAuthority('CLIENT')")
-    @PostMapping("ticket")
-    public ResponseEntity<ResponseMessage> buy(
-            @RequestBody @Valid TicketCreate newTicket
+    @RequestMapping("all")
+    public String tickets(@RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber,
+                         @RequestParam(value = "size", required = false, defaultValue = "5") int size,
+                         @RequestParam(value="sortBy", required = false, defaultValue = "id") String sortBy,
+                         Model model) {
+        model.addAttribute("items", ticketService.getAllPaged(pageNumber, size, sortBy));
+        model.addAttribute("mapping", Ticket.mapping);
+        model.addAttribute("modelName", "Ticket");
+        model.addAttribute("sortBy", sortBy);
+        return "admin/paginatedTable";
+    }
+
+    @RequestMapping("new")
+    public ModelAndView newForm() {
+        List<User> users = userService.getAll();
+        List<Travel> travels = travelService.getAll();
+        return new ModelAndView("admin/form")
+                .addObject("mapping", Ticket.mapping)
+                .addObject("modelName", "Ticket")
+                .addObject("operationType", "Add")
+                .addObject("user", users)
+                .addObject("travel", travels);
+    }
+
+    @RequestMapping("edit/{id}")
+    public ModelAndView editForm(@PathVariable(value = "id") Long id) {
+        List<User> users = userService.getAll();
+        List<Travel> travels = travelService.getAll();
+        return new ModelAndView("admin/form")
+                .addObject("mapping", Ticket.mapping)
+                .addObject("model", ticketService.getOne(id))
+                .addObject("modelName", "Ticket")
+                .addObject("operationType", "Edit")
+                .addObject("user", users)
+                .addObject("travel", travels);
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("save")
+    public ModelAndView save(
+            @ModelAttribute @Valid TicketCreateRequest ticketCreateRequest
     ) {
+        List<User> users = userService.getAll();
+        List<Travel> travels = travelService.getAll();
+        Ticket ticketDto;
+        if (ticketCreateRequest.getId() == null) {
+            ticketDto = new Ticket(userService.getById(ticketCreateRequest.user), ticketCreateRequest.travel);
+        } else {
+            ticketDto = ticketService.getOne(ticketCreateRequest.id);
+        }
+        ModelAndView modelAndView = new ModelAndView("admin/form")
+                .addObject("mapping", Ticket.mapping)
+                .addObject("modelName", "Ticket")
+                .addObject("operationType", "Edit")
+                .addObject("user", users)
+                .addObject("travel", travels);
         try {
-            User authenticatedUser = (User) SecurityContextHolder
-                    .getContext().getAuthentication().getPrincipal();
-
-            travelService.subtractRemainingSeats(newTicket.getTravelId());
-            ResponseMessage response = ticketService.save(authenticatedUser.getId(), newTicket);
-
-            return ResponseEntity.ok(response);
+            ResponseMessage response = ticketService.save(ticketDto);
+            if (response.getStatus() == HttpStatus.ACCEPTED) {
+                return modelAndView
+                        .addObject("model", response.getModel())
+                        .addObject("successMessage", response.getMessage());
+            }
+            throw new Exception(response.getMessage());
         } catch (Exception ex) {
             logger.error(ex.getMessage());
-            ResponseMessage response = new ResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
-            return ResponseEntity.internalServerError().body(response);
+            return modelAndView
+                    .addObject("model", ticketDto)
+                    .addObject("errorMessage", ex.getMessage());
         }
     }
 
-    @Operation(summary = "Get the tickets of authenticated user", tags = "Ticket")
-    @PreAuthorize("hasAuthority('CLIENT')")
-    @GetMapping("tickets/my")
-    public ResponseEntity<List<Travel>> getMy() {
+    @PostMapping("delete/{id}")
+    public String delete(@PathVariable Long id, RedirectAttributes attributes) {
         try {
-            User authenticatedUser = (User) SecurityContextHolder
-                    .getContext().getAuthentication().getPrincipal();
-            List<Travel> response = ticketService.getAllByUserId(authenticatedUser.getId());
-
-            return ResponseEntity.ok(response);
+            ResponseMessage response = ticketService.deleteById(id);
+            attributes.addFlashAttribute("successMessage", "Ticket was removed successfully.");
         } catch (Exception ex) {
-            logger.error(ex.getMessage());
-            return ResponseEntity.internalServerError().build();
+            attributes.addFlashAttribute("errorMessage", "Ticket cannot be deleted.");
         }
+        return "redirect:/admin/ticket/all";
     }
 }

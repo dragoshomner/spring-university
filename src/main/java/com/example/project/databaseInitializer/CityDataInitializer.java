@@ -1,10 +1,8 @@
 package com.example.project.databaseInitializer;
 
 import com.example.project.dtos.CityDto;
-import com.example.project.dtos.CreateTrain;
 import com.example.project.exceptions.DuplicateEntityException;
 import com.example.project.models.City;
-import com.example.project.models.Train;
 import com.example.project.services.CityService;
 import com.opencsv.CSVReader;
 import lombok.RequiredArgsConstructor;

@@ -5,7 +5,7 @@ public class NotFoundUserException extends RuntimeException {
         super(message);
     }
 
-    public NotFoundUserException(Class<?> myClass, Integer id) {
+    public NotFoundUserException(Class<?> myClass, Long id) {
         super(String.format("Entity %s with id %d not found", myClass.getSimpleName(), id));
     }
 }

@@ -1,5 +1,6 @@
 package com.example.project.models;
 
+import com.example.project.dtos.ObjectMapping;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 @Getter @Setter
 @Entity
@@ -39,4 +43,9 @@ public class City {
     public City(String name) {
         this.name = name;
     }
+
+    public static ArrayList<ObjectMapping> mapping = new ArrayList(Arrays.asList(
+        new ObjectMapping("id","ID", true, false, true, "number"),
+        new ObjectMapping("name", "Name", true, true, false, "text")
+    ));
 }

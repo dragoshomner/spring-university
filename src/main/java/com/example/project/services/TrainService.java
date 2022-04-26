@@ -1,16 +1,18 @@
 package com.example.project.services;
 
-import com.example.project.dtos.CreateTrain;
-import com.example.project.dtos.ResponseMessage;
-import com.example.project.dtos.TrainEdit;
-import com.example.project.dtos.TrainView;
+import com.example.project.dtos.*;
+import com.example.project.dtos.paging.Paged;
+import com.example.project.dtos.paging.Paging;
 import com.example.project.exceptions.DuplicateEntityException;
 import com.example.project.mappers.TrainMapper;
 import com.example.project.models.Train;
 import com.example.project.repositories.interfaces.ITrainRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -27,34 +29,31 @@ public class TrainService {
         return trainRepository.count();
     }
 
-    public List<TrainView> getAll(Pageable pageable) {
-        Page<Train> trains = trainRepository.findAll(pageable);
-        return trainMapper.trainIterableToTrainViewList(trains);
+    public List<TrainDto> getAll() {
+        Iterable<Train> trains = trainRepository.findAll();
+        return trainMapper.trainIterableToTrainDtoList(trains);
     }
 
-    public TrainView getOne(Long id) {
+    public TrainDto getOne(Long id) {
         Train train = trainRepository.findById(id).orElse(null);
-        return trainMapper.trainToTrainView(train);
+        return trainMapper.trainToTrainDto(train);
+    }
+
+    public Paged<TrainDto> getAllPaged(int pageNumber, int size, String sortBy) {
+        PageRequest request = PageRequest.of(pageNumber - 1, size, Sort.by(Sort.Direction.ASC, sortBy));
+        Page<TrainDto> trainDtoPage = trainRepository.findAll(request).map(trainMapper::trainToTrainDto);
+        return new Paged<>(trainDtoPage, Paging.of(trainDtoPage.getTotalPages(), pageNumber, size));
     }
 
     @Transactional
-    public void save(CreateTrain newCreateTrain) {
-        if (trainRepository.findByCode(newCreateTrain.getCode()).isPresent()) {
+    public ResponseMessage save(TrainDto newCreateTrain) {
+        if (trainRepository.findByCode(newCreateTrain.getCode()).isPresent() && newCreateTrain.getId() == null) {
             throw new DuplicateEntityException(Train.class, "code", newCreateTrain.getCode());
         }
-        Train newTrain = trainMapper.createTrainToTrain(newCreateTrain);
-        trainRepository.save(newTrain);
-    }
-
-    @Transactional
-    public ResponseMessage update(Long id, TrainEdit trainEdit) {
-        Train train = trainRepository.findById(id).orElse(null);
-        if (train != null) {
-            trainMapper.updateTrainFromTrainEdit(trainEdit, train);
-            trainRepository.save(train);
-            return new ResponseMessage(HttpStatus.ACCEPTED, "Train successfully updated!");
-        }
-        return new ResponseMessage(HttpStatus.NOT_FOUND, "Train not found!");
+        Train newTrain = trainMapper.trainDtoToTrain(newCreateTrain);
+        Train savedTrain = trainRepository.save(newTrain);
+        TrainDto trainView = trainMapper.trainToTrainDto(savedTrain);
+        return new ResponseMessage<TrainDto>(HttpStatus.ACCEPTED, "Train successfully saved!", trainView);
     }
 
     public ResponseMessage deleteById(Long id) {
