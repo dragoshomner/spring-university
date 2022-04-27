@@ -11,11 +11,11 @@
 
 <div th:replace="admin/navigation.html :: admin-navigation"></div>
 
-<div class="container">
+<div th:fragment="pagedTable" class="container">
     <h1 th:text="${modelName + ' Table'}" class="mt-3"></h1>
     <div class="row">
         <div class="col-lg-6">
-            <a th:href="${'/admin/' + modelName.toLowerCase() + '/new'}" class="btn btn-primary mt-3">Add new</a>
+            <a th:if="${type=='all' || type == null}" th:href="${'/admin/' + modelName.toLowerCase() + '/new'}" class="btn btn-primary mt-3">Add new</a>
         </div>
         <div class="col-lg-6">
             <select
@@ -52,8 +52,13 @@
                             th:each="mapItem : ${mapping}"
                             th:if="${mapItem.getShowTable() == true}"
                             th:text="${mapItem.getTitle()}"></th>
-                        <th>Edit</th>
-                        <th>Delete</th>
+                        <th:block th:if="${type=='all' || type == null}">
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </th:block>
+                        <th:block th:if="${type=='buy'}">
+                            <th></th>
+                        </th:block>
                     </tr>
                 </thead>
                 <tbody>
@@ -64,14 +69,25 @@
                                 __${'item.' + mapItem.getKey() + '.' + mapItem.getChildKey()}__ :
                                 __${'item.' + mapItem.getKey()}__}"
                         >${key}</td>
-                        <td>
-                            <a th:href="${'/admin/' + modelName.toLowerCase() + '/edit/' + item.getId()}" class="btn btn-warning">Edit</a>
-                        </td>
-                        <td>
-                            <form th:action="${'/admin/' + modelName.toLowerCase() + '/delete/' + item.getId()}" method="post">
-                                <button type="submit" class="btn btn-danger">Delete</button>
-                            </form>
-                        </td>
+
+                        <th:block th:if="${type=='all' || type == null}">
+                            <td>
+                                <a th:href="${'/admin/' + modelName.toLowerCase() + '/edit/' + item.getId()}" class="btn btn-warning">Edit</a>
+                            </td>
+                            <td>
+                                <form th:action="${'/admin/' + modelName.toLowerCase() + '/delete/' + item.getId()}" method="post">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </td>
+                        </th:block>
+
+                        <th:block th:if="${type=='buy'}">
+                            <td>
+                                <form th:action="${'/ticket/buy/' + item.getId()}" method="post">
+                                    <button type="submit" class="btn btn-primary">Buy</button>
+                                </form>
+                            </td>
+                        </th:block>
                     </tr>
                 </tbody>
             </table>
@@ -108,24 +124,7 @@
 
 <script th:src="@{/webjars/jquery/3.1.1/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/4.0.0-2/js/bootstrap.min.js}"></script>
-
-<script>
-    const goToPage = (e) => {
-        const url = new URL(window.location.href);
-        url.searchParams.set('pageNumber', e.getAttribute('data-page'));
-        window.location.href = url;
-    };
-
-    const sortByRedirect = (e) => {
-        const url = new URL(window.location.href);
-        if (e.value !== "sortBy") {
-            url.searchParams.set('sortBy', e.value);
-        } else {
-            url.searchParams.delete('sortBy');
-        }
-        window.location.href = url;
-    };
-</script>
+<script th:src="@{/scripts/app.js}"></script>
 
 </body>
 </html>

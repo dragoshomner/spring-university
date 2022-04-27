@@ -1,6 +1,7 @@
 package com.example.project.models;
 
 import lombok.Data;
+import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -17,6 +18,7 @@ import java.util.Set;
         @Index(name="unique_username_password", columnList="username, password", unique=true)
 })
 @EntityListeners(AuditingEntityListener.class)
+@Getter
 public class User implements UserDetails, Serializable {
 
     @Id

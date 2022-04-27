@@ -1,7 +1,9 @@
 package com.example.project.controllers.admin;
 
 import com.example.project.dtos.CityDto;
+import com.example.project.dtos.DriverDto;
 import com.example.project.dtos.ResponseMessage;
+import com.example.project.exceptions.ResourceNotFoundException;
 import com.example.project.models.City;
 import com.example.project.services.CityService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 
 @Controller
+@PreAuthorize("isAuthenticated()")
 @RequestMapping("admin/city")
 @RequiredArgsConstructor
 public class CityController {
@@ -25,6 +28,7 @@ public class CityController {
     public final Logger logger;
 
     @RequestMapping("all")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String cities(@RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber,
                             @RequestParam(value = "size", required = false, defaultValue = "5") int size,
                             @RequestParam(value="sortBy", required = false, defaultValue = "id") String sortBy,
@@ -37,6 +41,7 @@ public class CityController {
     }
 
     @RequestMapping("new")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ModelAndView newForm() {
         return new ModelAndView("admin/form")
             .addObject("mapping", City.mapping)
@@ -45,10 +50,15 @@ public class CityController {
     }
 
     @RequestMapping("edit/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ModelAndView editForm(@PathVariable(value = "id") Long id) {
+        CityDto cityDto = cityService.getOne(id);
+        if (cityDto == null) {
+            throw new ResourceNotFoundException("City with ID " + id + " not found");
+        }
         return new ModelAndView("admin/form")
             .addObject("mapping", City.mapping)
-            .addObject("model", cityService.getOne(id))
+            .addObject("model", cityDto)
             .addObject("modelName", "City")
             .addObject("operationType", "Edit");
     }
@@ -65,6 +75,7 @@ public class CityController {
         try {
             ResponseMessage response = cityService.save(cityDto);
             if (response.getStatus() == HttpStatus.ACCEPTED) {
+                logger.info(response.getMessage());
                 return modelAndView
                         .addObject("model", response.getModel())
                         .addObject("successMessage", response.getMessage());
@@ -79,11 +90,14 @@ public class CityController {
     }
 
     @PostMapping("delete/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String delete(@PathVariable Long id, RedirectAttributes attributes) {
         try {
             ResponseMessage response = cityService.deleteById(id);
+            logger.info(response.getMessage());
             attributes.addFlashAttribute("successMessage", "City was removed successfully.");
         } catch (Exception ex) {
+            logger.error(ex.getMessage());
             attributes.addFlashAttribute("errorMessage", "City cannot be deleted.");
         }
         return "redirect:/admin/city/all";

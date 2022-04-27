@@ -8,6 +8,8 @@ import lombok.Setter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -30,8 +32,11 @@ public class Route {
     @JoinColumn(name = "city_to_id", nullable = false)
     private City cityTo;
 
+    @Min(value = 1, message = "Minimum distance value is 1")
+    @Max(value = 5000, message = "Maximum distance value is 5000")
     private Integer distance;
 
+    @Min(value = 1, message = "Minimum duration value is 1")
     private Integer duration;
 
     public String getDescription() {

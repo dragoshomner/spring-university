@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Find travels</title>
+
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
+</head>
+<body>
+
+    <div th:replace="navigation.html :: user-navigation"></div>
+
+    <div th:replace="admin/paginatedTable.html :: pagedTable"></div>
+
+    <script th:src="@{/scripts/app.js}"></script>
+</body>
+</html>

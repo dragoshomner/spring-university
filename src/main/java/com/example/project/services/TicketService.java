@@ -30,9 +30,10 @@ public class TicketService {
         return ticketRepository.findById(id).orElse(null);
     }
     
-    public List<Travel> getAllByUserId(Long userId) {
-        var travels = ticketRepository.findAllByUser(new User(userId));
-        return travels.stream().map(Ticket::getTravel).collect(Collectors.toList());
+    public Paged<Ticket> getAllByUserId(int pageNumber, int size, String sortBy, User user) {
+        PageRequest request = PageRequest.of(pageNumber - 1, size, Sort.by(Sort.Direction.ASC, sortBy));
+        Page<Ticket> tickets = ticketRepository.findAllByUser(user, request);
+        return new Paged<Ticket>(tickets, Paging.of(tickets.getTotalPages(), pageNumber, size));
     }
 
     public Paged<Ticket> getAllPaged(int pageNumber, int size, String sortBy) {

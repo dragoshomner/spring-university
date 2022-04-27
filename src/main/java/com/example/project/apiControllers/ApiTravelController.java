@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +28,8 @@ public class ApiTravelController {
             @ModelAttribute TravelRequestParamFilter travelRequestParamFilter
     ) {
         try {
-            List<Travel> response = travelService.getAllByCustomParameters(travelRequestParamFilter);
+            PageRequest request = PageRequest.of(1, 100);
+            List<Travel> response = travelService.getAllByCustomParameters(travelRequestParamFilter, request);
             return ResponseEntity.ok(response);
         } catch (Exception ex) {
             logger.error(ex.getMessage());

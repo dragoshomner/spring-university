@@ -116,7 +116,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .failureUrl("/login-error")
         .and()
             .logout()
-            .logoutSuccessUrl("/");
+            .logoutUrl("/logout")
+            .logoutSuccessUrl("/login");
     }
 
     // Used by spring security if CORS is enabled.

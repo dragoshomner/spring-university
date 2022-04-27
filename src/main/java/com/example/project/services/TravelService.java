@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 import static java.lang.String.format;
 
@@ -24,11 +25,13 @@ import static java.lang.String.format;
 public class TravelService {
     public final ITravelRepository travelRepository;
 
-    public List<Travel> getAllByCustomParameters(TravelRequestParamFilter travelRequestParamFilter) {
+    public List<Travel> getAllByCustomParameters(TravelRequestParamFilter travelRequestParamFilter,
+                                                 PageRequest pageRequest) {
         return travelRepository.findAllByCustomParameters(
                 travelRequestParamFilter.getCityFromId(),
                 travelRequestParamFilter.getCityToId(),
-                travelRequestParamFilter.getDateFrom()
+                travelRequestParamFilter.getDateFrom(),
+                pageRequest
         );
     }
 
